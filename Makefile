@@ -1,7 +1,7 @@
 include version
 
 PLATFORM=$(shell uname)
-NCURSES=$(pkg-config --libs --cflags ncurses)
+NCURSES=$(shell pkg-config --libs --cflags ncurses)
 # -D_DARWIN_C_SOURCE -I/opt/local/include -L/opt/local/lib -lncurses
 
 UTF8_SUPPORT=yes
