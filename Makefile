@@ -30,9 +30,12 @@ LDFLAGS+=-lpanel -lncurses -lutil -lm -g
 endif
 endif
 
-OBJS:=utils.o mt.o error.o my_pty.o term.o scrollback.o help.o mem.o cv.o selbox.o stripstring.o color.o misc.o ui.o exec.o diff.o config.o cmdline.o globals.o history.o clipboard.o
-DEPENDS:= $(OBJS:%.o=%.d)
+vpath %.c src/
+vpath %.o bin/
 
+OBJS:=utils.o mt.o error.o my_pty.o term.o scrollback.o help.o mem.o cv.o selbox.o stripstring.o color.o misc.o ui.o exec.o diff.o config.o cmdline.o globals.o history.o clipboard.o
+OBJS:=$(addprefix bin/,${OBJS})
+DEPENDS:= $(OBJS:%.o=%.d)
 
 .PHONY: all check install uninstall clean distclean package
 all: multitail
@@ -41,6 +44,9 @@ pcredemo: LDFLAGS+=-lpcre
 
 multitail: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o multitail
+
+bin/%.o: src/%.c
+
 
 ccmultitail: $(OBJS)
 	ccmalloc --no-wrapper $(CC) -Wall -W $(OBJS) $(LDFLAGS) -o ccmultitail
@@ -59,8 +65,6 @@ install: multitail
 	mkdir -p $(DESTDIR)$(PREFIX)/etc/multitail/
 	cp multitail.conf $(CONFIG_FILE).new
 	cp conversion-scripts/* $(DESTDIR)$(PREFIX)/etc/multitail/
-#rm -f $(DESTDIR)$(PREFIX)/share/man/man1/multitail.1.gz
-#gzip -9 $(DESTDIR)$(PREFIX)/share/man/man1/multitail.1
 	#
 	# There's a mailinglist!
 	# Send an e-mail to minimalist@vanheusden.com with in the subject
