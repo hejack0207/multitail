@@ -30,11 +30,13 @@ LDFLAGS+=-lpanel -lncurses -lutil -lm -g
 endif
 endif
 
-vpath %.c src/
-vpath %.o bin/
+#vpath %.c src
+#vpath %.o bin
 
 OBJS:=utils.o mt.o error.o my_pty.o term.o scrollback.o help.o mem.o cv.o selbox.o stripstring.o color.o misc.o ui.o exec.o diff.o config.o cmdline.o globals.o history.o clipboard.o
 OBJS:=$(addprefix bin/,${OBJS})
+#SRCS:=$(subst bin/,src/,${OBJS})
+#SRCS:=$(subst .o,.c,${SRCS})
 DEPENDS:= $(OBJS:%.o=%.d)
 
 .PHONY: all check install uninstall clean distclean package
@@ -45,8 +47,10 @@ pcredemo: LDFLAGS+=-lpcre
 multitail: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o multitail
 
-bin/%.o: src/%.c
+#$(OBJS): $(SRCS)
 
+bin/%.o: 
+	$(CC) $(addprefix src/, $(addsuffix .c, $*))
 
 ccmultitail: $(OBJS)
 	ccmalloc --no-wrapper $(CC) -Wall -W $(OBJS) $(LDFLAGS) -o ccmultitail
