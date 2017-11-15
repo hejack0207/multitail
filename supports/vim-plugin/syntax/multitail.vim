@@ -33,14 +33,14 @@ syn keyword multitaliLinewrapOption	contained default_linewrap
 syn keyword multitaliBeepmethodOption	contained beep_method
 syn keyword multitaliDefaultbufferwhatOption	contained default_bufferwhat
 
-syn keyword colors		contained red green yellow blue magenta cyan white
-syn keyword linewrap_mode	contained a l r s S o w
-syn keyword buffer_what		contained f
-syn keyword on_off		contained on off
-syn keyword yes_no		contained ye no
-syn keyword display_attribute 	contained bold reverse
-syn keyword beep_method 	contained beep flash popup none
-syn keyword converter 		contained ip4tohost epochtodate errnotostr hextodec dectohex tai64todate script abbrtok signrtostring
+syn keyword colors		red green yellow blue magenta cyan white
+syn keyword linewrap_mode	a l r s S o w
+syn keyword buffer_what		f
+syn keyword on_off		on off
+syn keyword yes_no		ye no
+syn keyword display_attribute 	bold reverse
+syn keyword beep_method 	beep flash popup none
+syn keyword converter 		ip4tohost epochtodate errnotostr hextodec dectohex tai64todate script abbrtok signrtostring
 
 syn match mtNumber           	'[+-]\=\<\d\+\>'
 syn match mtFloat           	'[+-]\=\<\d\+\>'
@@ -48,11 +48,11 @@ syn match mtFloat           	'[+-]\=\<\d\+\>'
 syn match mtBind		'^bind:\w\+:\w\+'
 "syn match mtEditrule		''
 "syn match mtRule		''
-syn match mtConvert		'^convert:\w\+:\w\+:\w\+'
-syn match mtDefaultConvert	'^default_convert:\w\+:\w\+$'
-syn match mtDefaultMarkChanges	'^default_mark_change:\w\+:\w\+$'
-syn match mtUseEditScheme	'^useeditscheme:\w\+:\w\+$'
-syn match mtUseFilterScheme	'^usefilterscheme:\w\+:\w\+$'
+syn match mtConvert		'^convert:\w\+:\w\+:.\+$'
+syn match mtDefaultConvert	'^default_convert:\w\+:.\+$'
+syn match mtDefaultMarkChanges	'^default_mark_change:\w\+:.\+$'
+syn match mtUseEditScheme	'^useeditscheme:\w\+:.\+$'
+syn match mtUseFilterScheme	'^usefilterscheme:\w\+:.\+$'
 
 "syn region mtOptio 	 	start='^' end='$' contains=multitailOption oneline
 "syn region mtEditScheme		start='^' end='$' contains=mtEditrule
@@ -61,7 +61,21 @@ syn match mtUseFilterScheme	'^usefilterscheme:\w\+:\w\+$'
 "                                \ contains=zshTodo,@Spell fold
 syn case match
 
-highlight link multitailKeyword	Constant
+highlight link multitailKeyword		Constant
+highlight link colors			Constant
+highlight link linewrap_mode		Constant
+highlight link buffer_what		Constant
+highlight link on_off			Constant
+highlight link yes_no			Constant
+highlight link display_attribute	Constant
+highlight link beep_method 		Constant
+highlight link converter 		Constant
+
+highlight link mtConvert		Statement
+highlight link mtDefaultConvert		Statement
+highlight link mtDefaultMarkChanges	Statement
+highlight link mtUseEditScheme		Statement
+highlight link mtUseFilterScheme	Statement
 
 let b:current_syntax = "multitail"
 

@@ -13,6 +13,8 @@ CC?=gcc
 CFLAGS+=-Wall -Wextra -Wno-unused-parameter -funsigned-char -O3 -g
 CPPFLAGS+=-I$(PREFIX)/include -D$(PLATFORM) -DVERSION=\"$(VERSION)\" -DCONFIG_FILE=\"$(CONFIG_FILE)\" -D_FORTIFY_SOURCE=2
 
+CFLAGS+=-v
+CPPFLAGS+=-v
 # build dependency files while compile (*.d)
 CPPFLAGS+= -MMD -MP
 
@@ -30,13 +32,8 @@ LDFLAGS+=-lpanel -lncurses -lutil -lm -g
 endif
 endif
 
-#vpath %.c src
-#vpath %.o bin
-
-OBJS:=utils.o mt.o error.o my_pty.o term.o scrollback.o help.o mem.o cv.o selbox.o stripstring.o color.o misc.o ui.o exec.o diff.o config.o cmdline.o globals.o history.o clipboard.o
-OBJS:=$(addprefix bin/,${OBJS})
-#SRCS:=$(subst bin/,src/,${OBJS})
-#SRCS:=$(subst .o,.c,${SRCS})
+SRCS:=$(wildcard src/*.c)
+OBJS:=$(subst src,bin,$(SRCS:%.c=%.o))
 DEPENDS:= $(OBJS:%.o=%.d)
 
 .PHONY: all check install uninstall clean distclean package
@@ -44,13 +41,13 @@ all: multitail
 
 pcredemo: LDFLAGS+=-lpcre
 
+bin/%.o: src/%.c
+	@$(COMPILE.c) -o $@ $<
+
 multitail: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o multitail
 
-#$(OBJS): $(SRCS)
-
-bin/%.o: 
-	$(CC) $(addprefix src/, $(addsuffix .c, $*))
+$(info $(OBJS) $(DEPENDS) $(COMPILE.c))
 
 ccmultitail: $(OBJS)
 	ccmalloc --no-wrapper $(CC) -Wall -W $(OBJS) $(LDFLAGS) -o ccmultitail
@@ -124,7 +121,7 @@ coverity:
 	/home/folkert/.coverity-mt.sh
 
 distclean: clean
-	rm -rf cov-int cppcheck cppcheck.xml *.d *~ tags
+	rm -rf cov-int cppcheck cppcheck.xml $(wildcard src/*.d) *~ tags
 
 # include dependency files for any other rule:
 ifneq ($(filter-out clean distclean,$(MAKECMDGOALS)),)
